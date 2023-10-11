@@ -11,8 +11,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: TopPage(),
+    ThemeMode mode = ThemeMode.system;
+    return MaterialApp(
+      title: 'Pokemon App',
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: mode,
+      home: const TopPage(),
     );
   }
 }
