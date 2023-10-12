@@ -70,7 +70,7 @@ class _PokeListState extends State<PokeList> {
               padding: const EdgeInsets.all(0),
               icon: const Icon(Icons.auto_awesome_outlined),
               onPressed: () async {
-                var ret = await showModalBottomSheet<bool>(
+                await showModalBottomSheet<bool>(
                   context: context,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
