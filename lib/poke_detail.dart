@@ -1,30 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_app/const/pokeapi.dart';
+import './models/pokemon.dart';
 
 class PokeDetail extends StatelessWidget {
-  const PokeDetail({super.key});
+  const PokeDetail({Key? key, required this.poke}) : super(key: key);
+  final Pokemon poke;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            ListTile(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+            const Spacer(),
             Stack(
               children: [
                 Container(
                   padding: const EdgeInsets.all(32),
                   child: Image.network(
-                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+                    poke.imageUrl,
                     width: 100,
                     height: 100,
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.all(8),
-                  child: const Text(
-                    'No.25',
-                    style: TextStyle(
+                  child: Text(
+                    'No.${poke.id}',
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -32,24 +42,37 @@ class PokeDetail extends StatelessWidget {
                 ),
               ],
             ),
-            const Text(
-              'Pikachu',
-              style: TextStyle(
+            Text(
+              poke.name,
+              style: const TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Chip(
-              label: Text(
-                'electric',
-                style: TextStyle(
-                  color: Colors.yellow.computeLuminance() > 0.5
-                      ? Colors.black
-                      : Colors.white,
-                ),
-              ),
-              backgroundColor: Colors.yellow,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: poke.types
+                  .map(
+                    (type) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Chip(
+                        backgroundColor: pokeTypeColors[type] ?? Colors.grey,
+                        label: Text(
+                          type,
+                          style: TextStyle(
+                            color: (pokeTypeColors[type] ?? Colors.grey)
+                                        .computeLuminance() >
+                                    0.5
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
+            const Spacer(),
           ],
         ),
       ),
