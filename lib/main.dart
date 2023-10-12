@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_app/models/theme_mode.dart';
 import 'package:pokemon_app/poke_list.dart';
-import 'package:pokemon_app/poke_list_item.dart';
 import 'package:pokemon_app/settings.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode themeMode = ThemeMode.system;
+  @override
+  void initState() {
+    super.initState();
+    loadThemeMode().then((val) => setState(() => themeMode = val));
+  }
+
   @override
   Widget build(BuildContext context) {
-    ThemeMode mode = ThemeMode.system;
     return MaterialApp(
       title: 'Pokemon App',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      themeMode: mode,
+      themeMode: themeMode,
       home: const TopPage(),
     );
   }
