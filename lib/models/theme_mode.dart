@@ -1,50 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/theme_mode.dart';
 
-const defaultTheme = ThemeMode.system;
+class ThemeModeNotifier extends ChangeNotifier {
+  late ThemeMode _themeMode;
 
-int modeToVal(ThemeMode mode) {
-  switch (mode) {
-    case ThemeMode.system:
-      return 1;
-    case ThemeMode.dark:
-      return 2;
-    case ThemeMode.light:
-      return 3;
-    default:
-      return 0;
+  ThemeModeNotifier(SharedPreferences pref) {
+    _init(pref);
   }
-}
 
-ThemeMode valToMode(int val) {
-  switch (val) {
-    case 1:
-      return ThemeMode.system;
-    case 2:
-      return ThemeMode.dark;
-    case 3:
-      return ThemeMode.light;
-    default:
-      return ThemeMode.system;
+  ThemeMode get mode => _themeMode;
+
+  void _init(SharedPreferences pref) async {
+    _themeMode = await loadThemeMode();
+    notifyListeners();
   }
-}
 
-Future<void> saveThemeMode(ThemeMode mode) async {
-  final pref = await SharedPreferences.getInstance();
-  pref.setString(mode.key, mode.name);
-}
-
-Future<ThemeMode> loadThemeMode() async {
-  final pref = await SharedPreferences.getInstance();
-
-  return toMode(pref.getString(defaultTheme.key) ?? defaultTheme.name);
-}
-
-ThemeMode toMode(String str) {
-  return ThemeMode.values.where((val) => val.name == str).first;
-}
-
-extension ThemeModeEx on ThemeMode {
-  String get key => toString().split('.').first;
-  String get name => toString().split('.').last;
+  void update(ThemeMode nextMode) {
+    _themeMode = nextMode;
+    saveThemeMode(nextMode);
+    notifyListeners();
+  }
 }
